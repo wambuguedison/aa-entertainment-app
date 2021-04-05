@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:aa/onboarding.dart';
+import 'package:aa/cart.dart';
+import 'package:aa/discover.dart';
+import 'package:aa/user.dart';
+import 'package:aa/notifications.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,15 +14,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'AA Entertainment',
-      theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'IndieFlower'),
-      home: MyHomePage(title: 'AA Entertainment'),
-      initialRoute: '/onboarding',
-      routes: <String, WidgetBuilder>{
-        '/onboarding': (BuildContext context) => new Onboarding(),
-        '/home': (BuildContext context) => new MyHomePage(),
-      }
-    );
+        title: 'AA Entertainment',
+        theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'IndieFlower'),
+        initialRoute: '/onboarding',
+        routes: <String, WidgetBuilder>{
+          '/onboarding': (BuildContext context) => new Onboarding(),
+          '/home': (BuildContext context) => new MyHomePage(),
+          '/notifications': (BuildContext context) => new NotificationsPage(),
+        });
   }
 }
 
@@ -33,7 +36,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
-  int _counter = 0;
+
+  List<Widget> _widgetOptions = <Widget>[
+    Text("Home"),
+    DiscoverPage(),
+    CartPage(),
+    UserPage(),
+  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -47,35 +56,39 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           title: Text("AA Entertainment"),
           centerTitle: true,
-          leading: Text("")
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'You have pushed the button this many times:',
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.notifications,
+                color: Colors.white,
               ),
-              Text(
-                '$_counter',
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ],
-          ),
+              onPressed: () {
+                Navigator.pushNamed(context, '/notifications');
+              },
+            )
+          ],
         ),
+        body: _widgetOptions.elementAt(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
+          showSelectedLabels: true, // <-- HERE
+          showUnselectedLabels: false,
+          type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              label: '',
+              label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.business),
-              label: '',
+              icon: Icon(Icons.search),
+              label: 'Discover',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.school),
-              label: '',
+              icon: Icon(Icons.shopping_basket),
+              label: 'Cart',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'You',
             ),
           ],
           currentIndex: _selectedIndex,
@@ -83,6 +96,6 @@ class _MyHomePageState extends State<MyHomePage> {
           onTap: _onItemTapped,
         )
         // This trailing comma makes auto-formatting nicer for build methods.
-    );
+        );
   }
 }
