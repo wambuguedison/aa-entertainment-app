@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'AA Entertainment',
-        theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'IndieFlower'),
+        theme: ThemeData(primarySwatch: Colors.blue),
         initialRoute: '/onboarding',
         routes: <String, WidgetBuilder>{
           '/onboarding': (BuildContext context) => new Onboarding(),
@@ -36,6 +36,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
+  bool _notified = true;
 
   List<Widget> _widgetOptions = <Widget>[
     Text("Home"),
@@ -54,15 +55,23 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("AA Entertainment"),
+          title: Text(
+            "AA Entertainment",
+            style: TextStyle(
+              fontFamily: "IndieFlower",
+            ),
+          ),
           centerTitle: true,
           actions: <Widget>[
             IconButton(
               icon: Icon(
-                Icons.notifications,
-                color: Colors.white,
+                (_notified) ? Icons.notifications_active : Icons.notifications,
+                color: (_notified) ? Colors.red : Colors.white,
               ),
               onPressed: () {
+                setState(() {
+                  _notified = !_notified;
+                });
                 Navigator.pushNamed(context, '/notifications');
               },
             )
@@ -70,7 +79,11 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: _widgetOptions.elementAt(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
-          showSelectedLabels: true, // <-- HERE
+          selectedLabelStyle: TextStyle(
+            fontSize: 16,
+            fontFamily: "IndieFlower",
+          ),
+          showSelectedLabels: true,
           showUnselectedLabels: false,
           type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[
